@@ -47,4 +47,19 @@ describe('github auth', () => {
     const notLoggedIn = await agent(app).get('/api/v1/github/dashboard');
     expect(notLoggedIn.status).toBe(401);
   });
+
+  it('POST /api/v1/posts should create a new post for a signed in user', async () => {
+    await request.agent(app).get('/api/v1/github/login');
+
+    const res = await agent(app)
+      .post('/api/v1/posts')
+      .send({ title: 'it me', description: 'Tyler' });
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      id: expect.any(String),
+      title: expect.any(String),
+      description: expect.any(String),
+      created_at: expect.any(String),
+    });
+  });
 });
