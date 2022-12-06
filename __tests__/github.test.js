@@ -41,16 +41,16 @@ describe('github auth', () => {
     });
   });
 
-  // it('DELETE /api/v1/github should logout a user', async () => {
-  //   const loggedIn = await agent.get('/api/v1/github/login');
-  //   expect(loggedIn.status).toBe(302);
+  it('DELETE /api/v1/github should logout a user', async () => {
+    const loggedIn = await agent.get('/api/v1/github/login');
+    expect(loggedIn.status).toBe(302);
 
-  //   const res = await agent.delete('/api/v1/github');
-  //   expect(res.status).toBe(204);
+    const res = await agent.delete('/api/v1/github');
+    expect(res.status).toBe(204);
 
-  //   const notLoggedIn = await agent.get('/api/v1/github/dashboard');
-  //   expect(notLoggedIn.status).toBe(401);
-  // });
+    const notLoggedIn = await agent.get('/api/v1/github/dashboard');
+    expect(notLoggedIn.status).toBe(401);
+  });
 
   it('POST /api/v1/posts should create a new post for a authenticated users', async () => {
     const res = await agent.get('/api/v1/github/callback?code=42');
@@ -96,14 +96,14 @@ describe('github auth', () => {
     expect(res.body).toMatchInlineSnapshot(`
       Array [
         Object {
-          "created_at": "2022-12-06T22:21:09.081Z",
+          "created_at": "2022-12-06T23:20:10.204Z",
           "description": "salsa",
           "id": "2",
           "title": "its hot",
           "user_id": "1",
         },
         Object {
-          "created_at": "2022-12-06T22:21:09.068Z",
+          "created_at": "2022-12-06T23:20:10.193Z",
           "description": "cheese",
           "id": "1",
           "title": "cool",
