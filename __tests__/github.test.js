@@ -48,8 +48,11 @@ describe('github auth', () => {
     expect(notLoggedIn.status).toBe(401);
   });
 
-  it('POST /api/v1/posts should create a new post for a signed in user', async () => {
-    await request.agent(app).get('/api/v1/github/login');
+  it('POST /api/v1/posts should create a new post for a authenticated users', async () => {
+    const loggedIn = await request(app).get('/api/v1/github/login');
+    await agent(app).get('/api/v1/github/callback');
+    expect(loggedIn.status).toBe(302);
+    console.log(agent);
 
     const res = await agent(app)
       .post('/api/v1/posts')
