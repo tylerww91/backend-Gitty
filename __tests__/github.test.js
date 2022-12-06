@@ -96,14 +96,14 @@ describe('github auth', () => {
     expect(res.body).toMatchInlineSnapshot(`
       Array [
         Object {
-          "created_at": "2022-12-06T23:20:10.204Z",
+          "created_at": "2022-12-06T23:26:05.077Z",
           "description": "salsa",
           "id": "2",
           "title": "its hot",
           "user_id": "1",
         },
         Object {
-          "created_at": "2022-12-06T23:20:10.193Z",
+          "created_at": "2022-12-06T23:26:05.065Z",
           "description": "cheese",
           "id": "1",
           "title": "cool",
