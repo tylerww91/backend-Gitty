@@ -68,15 +68,15 @@ describe('github auth', () => {
     });
   });
 
-  // it('POST /api/v1/posts should decline user posts above 255 characters', async () => {
-  //   const res = await agent.get('/api/v1/github/callback?code=42');
-  //   expect(res.status).toBe(302);
-  //   const resp = await agent.post('/api/v1/posts').send({
-  //     title: 'Bob',
-  //     description:
-  //       'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH!!',
-  //     user_id: res.body.id,
-  //   });
-  //   expect(resp.status).toBe(400, 'TOO LONG');
-  // });
+  it('POST /api/v1/posts should decline user posts above 255 characters', async () => {
+    const res = await agent.get('/api/v1/github/callback?code=42');
+    expect(res.status).toBe(302);
+    const resp = await agent.post('/api/v1/posts').send({
+      title: 'Bob',
+      description:
+        'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH!!',
+      user_id: res.body.id,
+    });
+    expect(resp.status).toBe(400, 'TOO LONG');
+  });
 });
