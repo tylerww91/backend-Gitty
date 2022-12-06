@@ -2,9 +2,11 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const { agent } = require('supertest');
 
 jest.mock('../lib/services/github');
+
+//putting this in the global scope makes life easier
+const agent = request.agent(app);
 
 describe('github auth', () => {
   beforeEach(() => {
@@ -23,10 +25,12 @@ describe('github auth', () => {
   });
 
   it('/api/v1/github/callback should login users and redirect to dashboard', async () => {
+    //think of this as register and log in, the GET /callback route uses functions to give us what is necessary from github
     const res = await request
       .agent(app)
       .get('/api/v1/github/callback?code=42')
       .redirects(1);
+
     expect(res.body).toEqual({
       id: expect.any(String),
       login: 'fake_github_user',
@@ -38,31 +42,41 @@ describe('github auth', () => {
   });
 
   it('DELETE /api/v1/github should logout a user', async () => {
-    const loggedIn = await request(app).get('/api/v1/github/login');
+    const loggedIn = await agent.get('/api/v1/github/login');
     expect(loggedIn.status).toBe(302);
 
-    const res = await agent(app).delete('/api/v1/github');
+    const res = await agent.delete('/api/v1/github');
     expect(res.status).toBe(204);
 
-    const notLoggedIn = await agent(app).get('/api/v1/github/dashboard');
+    const notLoggedIn = await agent.get('/api/v1/github/dashboard');
     expect(notLoggedIn.status).toBe(401);
   });
 
   it('POST /api/v1/posts should create a new post for a authenticated users', async () => {
-    const loggedIn = await request(app).get('/api/v1/github/login');
-    await agent(app).get('/api/v1/github/callback');
-    expect(loggedIn.status).toBe(302);
-    console.log(agent);
-
-    const res = await agent(app)
+    const res = await agent.get('/api/v1/github/callback?code=42');
+    expect(res.status).toBe(302);
+    const resp = await agent
       .post('/api/v1/posts')
-      .send({ title: 'it me', description: 'Tyler' });
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
+      .send({ title: 'it me', description: 'Tyler', user_id: res.body.id });
+    expect(resp.status).toBe(200);
+    expect(resp.body).toEqual({
+      description: expect.any(String),
       id: expect.any(String),
       title: expect.any(String),
-      description: expect.any(String),
+      user_id: expect.any(String),
       created_at: expect.any(String),
     });
   });
+
+  // it('POST /api/v1/posts should decline user posts above 255 characters', async () => {
+  //   const res = await agent.get('/api/v1/github/callback?code=42');
+  //   expect(res.status).toBe(302);
+  //   const resp = await agent.post('/api/v1/posts').send({
+  //     title: 'Bob',
+  //     description:
+  //       'BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH!!',
+  //     user_id: res.body.id,
+  //   });
+  //   expect(resp.status).toBe(400, 'TOO LONG');
+  // });
 });
