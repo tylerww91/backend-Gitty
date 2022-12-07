@@ -24,6 +24,5 @@ CREATE TABLE posts (
   user_id BIGINT,
   title VARCHAR,
   description VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   FOREIGN KEY (user_id) REFERENCES github_users(id)
 );

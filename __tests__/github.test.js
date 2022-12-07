@@ -64,7 +64,6 @@ describe('github auth', () => {
       id: expect.any(String),
       title: expect.any(String),
       user_id: expect.any(String),
-      created_at: expect.any(String),
     });
   });
 
@@ -96,17 +95,15 @@ describe('github auth', () => {
     expect(res.body).toMatchInlineSnapshot(`
       Array [
         Object {
-          "created_at": "2022-12-06T23:26:05.077Z",
-          "description": "salsa",
-          "id": "2",
-          "title": "its hot",
-          "user_id": "1",
-        },
-        Object {
-          "created_at": "2022-12-06T23:26:05.065Z",
           "description": "cheese",
           "id": "1",
           "title": "cool",
+          "user_id": "1",
+        },
+        Object {
+          "description": "salsa",
+          "id": "2",
+          "title": "its hot",
           "user_id": "1",
         },
       ]
